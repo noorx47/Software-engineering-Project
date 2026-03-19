@@ -301,4 +301,195 @@
     const bought = items.filter(i => i.bought).length;
     const total = items.length;
     const percent = Math.round((bought / total) * 100);
-    document.getElementById('progr
+    document.getElementById('progressText').textContent = `${bought}/${total}`;
+    document.getElementById('progressFill').style.width = `${percent}%`;
+    document.getElementById('itemCount').textContent = `${total} item${total !== 1 ? 's' : ''}`;
+    document.getElementById('progressMsg').textContent = percent === 100
+      ? '🎉 All done! Great shopping!'
+      : `${total - bought} item${total - bought !== 1 ? 's' : ''} left to buy`;
+
+    // Show items as cards
+    container.innerHTML = '<div class="items-grid" id="itemsGrid"></div>';
+    const grid = document.getElementById('itemsGrid');
+
+    // Load each item card with image
+    for (const item of items) {
+      const card = document.createElement('div');
+      card.className = `item-card ${item.bought ? 'bought-card' : ''}`;
+
+      const emoji = getEmoji(item.category, item.name);
+      const catClass = { Food: 'cat-food', Toiletries: 'cat-toiletries', Other: 'cat-other' };
+
+      // Show emoji placeholder first
+      card.innerHTML = `
+        <div style="width:100%; height:130px; background:#f9f9f9; display:flex; align-items:center; justify-content:center; font-size:52px;">
+          ${emoji}
+        </div>
+        <div class="item-card-body">
+          <div class="item-card-name ${item.bought ? 'bought' : ''}">${item.name}</div>
+          <div class="item-card-meta">
+            📦 ${item.quantity} · <span class="badge ${catClass[item.category] || ''}">${item.category}</span><br/>
+            👤 ${item.addedBy?.username || 'someone'}
+          </div>
+          <div class="item-card-actions">
+            <button class="btn-done" onclick="toggleBought('${item._id}')">
+              ${item.bought ? '↩ Undo' : '✅ Done'}
+            </button>
+            <button class="btn-del" onclick="deleteItem('${item._id}')">🗑️</button>
+          </div>
+        </div>
+        ${item.bought ? '<div class="bought-ribbon">✓ Bought</div>' : ''}
+      `;
+
+      grid.appendChild(card);
+
+      // Try to load real product image in background
+      if (item.category === 'Food') {
+        getProductImage(item.name).then(imgUrl => {
+          if (imgUrl) {
+            const placeholder = card.querySelector('div[style*="font-size:52px"]');
+            if (placeholder) {
+              placeholder.outerHTML = `<img src="${imgUrl}" alt="${item.name}" onerror="this.style.display='none'" />`;
+            }
+          }
+        });
+      }
+    }
+  }
+
+  // Search product suggestions
+  let searchTimeout;
+  async function searchProduct(query) {
+    clearTimeout(searchTimeout);
+    if (query.length < 2) {
+      document.getElementById('suggestions').style.display = 'none';
+      return;
+    }
+
+    searchTimeout = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=5`
+        );
+        const data = await res.json();
+
+        if (data.products && data.products.length > 0) {
+          const names = [...new Set(data.products
+            .map(p => p.product_name)
+            .filter(n => n && n.length > 0)
+            .slice(0, 5)
+          )];
+
+          if (names.length > 0) {
+            document.getElementById('suggestions').style.display = 'block';
+            document.getElementById('suggestionsList').innerHTML = names.map(name => `
+              <span onclick="selectSuggestion('${name.replace(/'/g, '')}')"
+                style="background:#E8F5E9; color:#1B5E20; padding:4px 10px; border-radius:20px; font-size:12px; cursor:pointer; border:1px solid #A5D6A7;">
+                ${name}
+              </span>
+            `).join('');
+          }
+        }
+      } catch (e) {}
+    }, 400);
+  }
+
+  function selectSuggestion(name) {
+    document.getElementById('itemName').value = name;
+    document.getElementById('suggestions').style.display = 'none';
+  }
+
+  async function addItem() {
+    const name = document.getElementById('itemName').value.trim();
+    const quantity = document.getElementById('itemQuantity').value.trim() || '1';
+    const category = document.getElementById('itemCategory').value;
+
+    if (!name) {
+      document.getElementById('itemError').textContent = 'Please enter an item name';
+      return;
+    }
+
+    const res = await fetch(`${API}/items`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ name, quantity, category, listId })
+    });
+
+    if (res.ok) {
+      document.getElementById('itemName').value = '';
+      document.getElementById('itemQuantity').value = '';
+      document.getElementById('itemError').textContent = '';
+      document.getElementById('suggestions').style.display = 'none';
+      loadItems();
+    }
+  }
+
+  async function toggleBought(id) {
+    await fetch(`${API}/items/${id}/bought`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    loadItems();
+  }
+
+  function deleteList(id) {
+  // Show inline confirmation instead of browser popup
+  const card = document.getElementById(`list-${id}`);
+  card.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; padding: 4px 0;">
+      <span style="font-size:14px; color:#c62828; font-weight:600;">⚠️ Delete this list?</span>
+      <div class="btn-group">
+        <button class="btn-danger" onclick="confirmDelete('${id}')">Yes, delete</button>
+        <button class="btn-secondary" onclick="loadLists()">Cancel</button>
+      </div>
+    </div>
+  `;
+}
+
+async function confirmDelete(id) {
+  await fetch(`${API}/lists/${id}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+  loadLists();
+}
+
+  async function inviteFlatmate() {
+    const username = document.getElementById('inviteUsername').value.trim();
+    if (!username) {
+      document.getElementById('inviteError').textContent = 'Please enter a username';
+      return;
+    }
+
+    const res = await fetch(`${API}/lists/${listId}/invite`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ username })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      document.getElementById('inviteSuccess').textContent = '✅ Flatmate added!';
+      document.getElementById('inviteError').textContent = '';
+      document.getElementById('inviteUsername').value = '';
+    } else {
+      document.getElementById('inviteError').textContent = data.message;
+      document.getElementById('inviteSuccess').textContent = '';
+    }
+  }
+
+  function logout() {
+    localStorage.clear();
+    window.location.href = 'index.html';
+  }
+</script>
+
+</body>
+</html>
