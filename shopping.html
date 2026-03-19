@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shopping List</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="nav">
+  <button onclick="window.location.href='lists.html'" style="background:#2E7D32; color:white;">← Back</button>
+  <h2 id="listTitle">Shopping List</h2>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<div class="container">
+
+  <!-- Add item form -->
+  <div class="card">
+    <h2>Add Item</h2>
+    <p id="itemError" class="error"></p>
+    <label>Item name</label>
+    <input type="text" id="itemName" placeholder="e.g. Milk" />
+    <label>Quantity</label>
+    <input type="text" id="itemQuantity" placeholder="e.g. 2 litres" />
+    <label>Category</label>
+    <select id="itemCategory">
+      <option value="Food">🥦 Food</option>
+      <option value="Toiletries">🧴 Toiletries</option>
+      <option value="Other">📦 Other</option>
+    </select>
+    <button onclick="addItem()">Add Item</button>
+  </div>
+
+  <!-- Items list -->
+  <div class="card">
+    <h2>Items</h2>
+    <div id="itemsContainer">Loading...</div>
+  </div>
+
+</div>
+
+<script>
+  const API = 'http://localhost:3000/api';
+  const token = localStorage.getItem('token');
+  const listId = localStorage.getItem('currentListId');
+  const listName = localStorage.getItem('currentListName');
+
+  // Redirect to login if not logged in
+  if (!token || !listId) window.location.href = 'index.html';
+
+  // Set list title
+  document.getElementById('listTitle').textContent = listName;
+
+  // Load items when page opens
+  loadItems();
+
+  // Auto refresh every 5 seconds
+  setInterval(loadItems, 5000);
+
+  async function loadItems() {
+    const res = await fetch(`${API}/items/${listId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    const items = await res.json();
+    const container = document.getElementById('itemsContainer');
+
+    if (items.length === 0) {
+      container.innerHTML = '<p style="color:#888">No items yet. Add one above!</p>';
+      return;
+    }
+
+    container.innerHTML = items.map(item => `
+      <div class="list-item">
+        <div class="item-info">
+          <span class="item-name ${item.bought ? 'bought' : ''}">${item.name}</span>
+          <span class="item-meta">
+            ${item.quantity} · 
+            <span class="badge">${item.category}</span> · 
+            Added by ${item.addedBy?.username || 'someone'}
+          </span>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn-small" onclick="toggleBought('${item._id}')">
+            ${item.bought ? '↩ Undo' : '✅ Done'}
+          </button>
+          <button class="btn-danger" onclick="deleteItem('${item._id}')">Delete</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  async function addItem() {
+    const name = document.getElementById('itemName').value;
+    const quantity = document.getElementById('itemQuantity').value || '1';
+    const category = document.getElementById('itemCategory').value;
+
+    if (!name) {
+      document.getElementById('itemError').textContent = 'Please enter an item name';
+      return;
+    }
+
+    const res = await fetch(`${API}/items`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ name, quantity, category, listId })
+    });
+
+    if (res.ok) {
+      document.getElementById('itemName').value = '';
+      document.getElementById('itemQuantity').value = '';
+      document.getElementById('itemError').textContent = '';
+      loadItems();
+    }
+  }
+
+  async function toggleBought(id) {
+    await fetch(`${API}/items/${id}/bought`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    loadItems();
+  }
+
+  async function deleteItem(id) {
+    await fetch(`${API}/items/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    loadItems();
+  }
+
+  function logout() {
+    localStorage.clear();
+    window.location.href = 'index.html';
+  }
+</script>
+
+</body>
+</html>
