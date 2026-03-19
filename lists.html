@@ -4,43 +4,76 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Lists</title>
- <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <!-- Navbar -->
 <div class="nav">
-  <h2>🛒 Shopping List</h2>
-  <button onclick="logout()">Logout</button>
+  <span style="font-size:18px; font-weight:700;">🛒 ShopList</span>
+  <div style="display:flex; align-items:center; gap:12px;">
+    <span style="font-size:14px; opacity:0.8;">👤 <span id="navUsername"></span></span>
+    <button class="nav-btn" onclick="logout()">Logout</button>
+  </div>
 </div>
 
 <div class="container">
-  <h1>My Lists</h1>
+
+  <!-- Hero -->
+  <div class="hero">
+    <span class="hero-emoji">🛒</span>
+    <div class="hero-title">Your Shopping Lists</div>
+    <div class="hero-sub">Stay in sync with your flatmates</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-number" id="totalLists">0</div>
+      <div class="stat-label">Total Lists</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">👥</div>
+      <div class="stat-label">Shared</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">✅</div>
+      <div class="stat-label">Active</div>
+    </div>
+  </div>
 
   <!-- Create new list -->
   <div class="card">
-    <h2>Create a new list</h2>
+    <h2>➕ New List</h2>
     <p id="listError" class="error"></p>
-    <label>List name</label>
-    <input type="text" id="listName" placeholder="e.g. Weekly Shop" />
-    <button onclick="createList()">Create List</button>
+    <div class="input-row">
+      <input type="text" id="listName" placeholder="e.g. Weekly Shop, Party Supplies..." />
+      <button class="btn-primary" onclick="createList()">Create</button>
+    </div>
   </div>
 
   <!-- All lists -->
   <div class="card">
-    <h2>Your lists</h2>
-    <div id="listsContainer">Loading...</div>
+    <h2>📋 Your Lists</h2>
+    <div id="listsContainer">
+      <div class="empty-state">
+        <span class="empty-state-emoji">📝</span>
+        <p class="empty-state-text">Loading your lists...</p>
+      </div>
+    </div>
   </div>
+
 </div>
 
 <script>
   const API = 'http://localhost:3000/api';
   const token = localStorage.getItem('token');
+  const username = localStorage.getItem('username');
 
-  // Redirect to login if not logged in
   if (!token) window.location.href = 'index.html';
 
-  // Load lists when page opens
+  document.getElementById('navUsername').textContent = username;
+
   loadLists();
 
   async function loadLists() {
@@ -51,27 +84,34 @@
     const lists = await res.json();
     const container = document.getElementById('listsContainer');
 
-    if (lists.length === 0) {
-      container.innerHTML = '<p style="color:#888">No lists yet. Create one above!</p>';
+    if (!Array.isArray(lists) || lists.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <span class="empty-state-emoji">🛒</span>
+          <p class="empty-state-text">No lists yet. Create your first one above!</p>
+        </div>`;
+      document.getElementById('totalLists').textContent = '0';
       return;
     }
 
+    document.getElementById('totalLists').textContent = lists.length;
+
     container.innerHTML = lists.map(list => `
-      <div class="list-item">
-        <div class="item-info">
-          <span class="item-name">${list.name}</span>
-          <span class="item-meta">Created ${new Date(list.createdAt).toLocaleDateString()}</span>
-        </div>
+      <div class="list-card">
         <div>
-          <button class="btn-small" onclick="openList('${list._id}', '${list.name}')">Open</button>
-          <button class="btn-danger" onclick="deleteList('${list._id}')">Delete</button>
+          <div class="list-card-name">📋 ${list.name}</div>
+          <div class="list-card-date">📅 ${new Date(list.createdAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })}</div>
+        </div>
+        <div class="btn-group">
+          <button class="btn-secondary" onclick="openList('${list._id}', '${list.name}')">Open →</button>
+          <button class="btn-danger" onclick="deleteList('${list._id}')">🗑️</button>
         </div>
       </div>
     `).join('');
   }
 
   async function createList() {
-    const name = document.getElementById('listName').value;
+    const name = document.getElementById('listName').value.trim();
     if (!name) {
       document.getElementById('listError').textContent = 'Please enter a list name';
       return;
@@ -95,12 +135,10 @@
 
   async function deleteList(id) {
     if (!confirm('Are you sure you want to delete this list?')) return;
-
     await fetch(`${API}/lists/${id}`, {
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${token}` }
     });
-
     loadLists();
   }
 

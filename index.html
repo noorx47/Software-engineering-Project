@@ -3,48 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Shopping List — Login</title>
+  <title>Shopping List</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <div class="container">
-  <h1>🛒 Shopping List</h1>
 
-  
+  <div class="logo">🛒</div>
+  <div class="logo-title">Shopping List</div>
+  <div class="logo-sub">Share lists with your flatmates</div>
+
+  <!-- Tabs -->
   <div class="tabs">
     <div class="tab active" onclick="showTab('login')">Login</div>
     <div class="tab" onclick="showTab('register')">Register</div>
   </div>
 
- 
+  <!-- Login Form -->
   <div class="card" id="loginForm">
-    <h2>Welcome back!</h2>
+    <h2>Welcome back! 👋</h2>
     <p id="loginError" class="error"></p>
     <label>Email</label>
     <input type="email" id="loginEmail" placeholder="your@email.com" />
     <label>Password</label>
     <input type="password" id="loginPassword" placeholder="••••••••" />
-    <button onclick="login()">Login</button>
+    <button class="btn-primary" onclick="login()">Login</button>
   </div>
 
-  
+  <!-- Register Form -->
   <div class="card" id="registerForm" style="display:none">
-    <h2>Create account</h2>
+    <h2>Create account 🎉</h2>
     <p id="registerError" class="error"></p>
     <p id="registerSuccess" class="success"></p>
     <label>Username</label>
-    <input type="text" id="regUsername" placeholder="harnoor" />
+    <input type="text" id="regUsername" placeholder="e.g. harnoor" />
     <label>Email</label>
     <input type="email" id="regEmail" placeholder="your@email.com" />
     <label>Password</label>
     <input type="password" id="regPassword" placeholder="••••••••" />
-    <button onclick="register()">Register</button>
+    <button class="btn-primary" onclick="register()">Create Account</button>
   </div>
+
 </div>
 
 <script>
   const API = 'http://localhost:3000/api';
+
+  // Redirect if already logged in
+  if (localStorage.getItem('token')) window.location.href = 'lists.html';
 
   function showTab(tab) {
     document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
@@ -58,6 +65,11 @@
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
 
+    if (!email || !password) {
+      document.getElementById('loginError').textContent = 'Please fill in all fields';
+      return;
+    }
+
     const res = await fetch(`${API}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -69,6 +81,7 @@
     if (res.ok) {
       localStorage.setItem('token', data.token);
       localStorage.setItem('username', data.username);
+      localStorage.setItem('userId', data.userId);
       window.location.href = 'lists.html';
     } else {
       document.getElementById('loginError').textContent = data.message;
@@ -80,6 +93,11 @@
     const email = document.getElementById('regEmail').value;
     const password = document.getElementById('regPassword').value;
 
+    if (!username || !email || !password) {
+      document.getElementById('registerError').textContent = 'Please fill in all fields';
+      return;
+    }
+
     const res = await fetch(`${API}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -89,9 +107,9 @@
     const data = await res.json();
 
     if (res.ok) {
-      document.getElementById('registerSuccess').textContent = 'Account created! Please login.';
+      document.getElementById('registerSuccess').textContent = '✅ Account created! Please login.';
       document.getElementById('registerError').textContent = '';
-      showTab('login');
+      setTimeout(() => showTab('login'), 1500);
     } else {
       document.getElementById('registerError').textContent = data.message;
     }
