@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
-const List = require('../Models/list');
-const User = require('../Models/User');
+const List = require('../models/List'); // Capital 'L' to match List.js
+const User = require('../models/User');
 const auth = require('../middleware/auth');
 
 // Get all lists for the logged in user
