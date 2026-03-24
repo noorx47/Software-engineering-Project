@@ -29,13 +29,13 @@ router.post('/register', [
 
     const { username, email, password } = req.body;
 
-    // Check if user already exists
+    // Checuser already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    // Hash the password before saving
+    
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Save new user
@@ -59,7 +59,6 @@ router.post('/login', [
     .notEmpty().withMessage('Password is required')
 ], async (req, res) => {
   try {
-    // Check validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ message: errors.array()[0].msg });
@@ -67,7 +66,7 @@ router.post('/login', [
 
     const { email, password } = req.body;
 
-    // Find user by email
+    
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' });
@@ -79,7 +78,7 @@ router.post('/login', [
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Create JWT token
+    
     const token = jwt.sign(
       { userId: user._id, username: user.username },
       process.env.JWT_SECRET,

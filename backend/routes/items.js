@@ -4,7 +4,7 @@ const { body, validationResult } = require('express-validator');
 const Item = require('../Models/item');
 const auth = require('../middleware/auth');
 
-// Get all items in a list
+
 router.get('/:listId', auth, async (req, res) => {
   try {
     const items = await Item.find({ listId: req.params.listId })
@@ -15,7 +15,7 @@ router.get('/:listId', auth, async (req, res) => {
   }
 });
 
-// Add an item to a list
+
 router.post('/', auth, [
   // Validate inputs
   body('name')
@@ -56,7 +56,7 @@ router.post('/', auth, [
   }
 });
 
-// Tick or untick an item
+
 router.patch('/:id/bought', auth, async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
