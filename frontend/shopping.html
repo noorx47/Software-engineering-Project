@@ -3,56 +3,329 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Shopping List</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>FlatCart — Shopping</title>
   <style>
-    body { overflow-x: hidden; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0a0e1a;
+      overflow-x: hidden;
+    }
+
+    .bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      background: radial-gradient(ellipse at 20% 50%, rgba(30,80,200,0.3) 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 20%, rgba(100,20,200,0.2) 0%, transparent 50%),
+                  radial-gradient(ellipse at 60% 80%, rgba(0,150,255,0.2) 0%, transparent 50%);
+    }
+
+    .particles {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: rgba(100,180,255,0.5);
+      border-radius: 50%;
+      animation: floatParticle linear infinite;
+    }
+
+    .particle:nth-child(1)  { left: 10%; animation-duration: 15s; animation-delay: 0s; }
+    .particle:nth-child(2)  { left: 25%; animation-duration: 12s; animation-delay: 2s; width: 4px; height: 4px; }
+    .particle:nth-child(3)  { left: 40%; animation-duration: 18s; animation-delay: 1s; }
+    .particle:nth-child(4)  { left: 55%; animation-duration: 14s; animation-delay: 3s; width: 5px; height: 5px; }
+    .particle:nth-child(5)  { left: 70%; animation-duration: 16s; animation-delay: 0.5s; }
+    .particle:nth-child(6)  { left: 85%; animation-duration: 11s; animation-delay: 2.5s; width: 4px; height: 4px; }
+    .particle:nth-child(7)  { left: 92%; animation-duration: 19s; animation-delay: 1.5s; }
+    .particle:nth-child(8)  { left: 5%;  animation-duration: 13s; animation-delay: 4s; }
+
+    @keyframes floatParticle {
+      0%   { transform: translateY(110vh); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { transform: translateY(-10vh);  opacity: 0; }
+    }
+
+    /* NAV */
+    .nav {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 40px;
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .nav-logo {
+      font-size: 20px;
+      font-weight: 800;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-btn {
+      background: rgba(255,255,255,0.07);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 9px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255,255,255,0.12);
+      transform: translateY(-1px);
+    }
+
+    /* LAYOUT */
     .page-layout {
+      position: relative;
+      z-index: 1;
       display: grid;
       grid-template-columns: 340px 1fr;
       gap: 24px;
-      max-width: 1200px;
-      margin: 24px auto;
-      padding: 0 24px;
+      max-width: 1300px;
+      margin: 28px auto;
+      padding: 0 28px;
     }
+
     .left-panel { display: flex; flex-direction: column; gap: 20px; }
     .right-panel { display: flex; flex-direction: column; gap: 20px; }
+
+    /* GLASS CARDS */
+    .glass-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      transition: all 0.3s;
+    }
+
+    .glass-card:hover {
+      border-color: rgba(247,183,49,0.2);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+    }
+
+    .glass-card h2 {
+      color: white;
+      font-size: 16px;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+
+    /* PROGRESS BAR */
+    .progress-bar {
+      background: rgba(255,255,255,0.08);
+      border-radius: 20px;
+      height: 8px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      background: linear-gradient(90deg, #f7b731, #ff9f43);
+      height: 100%;
+      border-radius: 20px;
+      transition: width 0.5s ease;
+    }
+
+    .progress-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffd166;
+    }
+
+    .progress-msg {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    /* INPUTS */
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 6px;
+    }
+
+    .glass-input {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      color: white;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.2s;
+      margin-bottom: 14px;
+    }
+
+    .glass-input::placeholder { color: rgba(255,255,255,0.3); }
+
+    .glass-input:focus {
+      border-color: #ffd166;
+      background: rgba(255,255,255,0.09);
+      box-shadow: 0 0 0 3px rgba(255,209,102,0.1);
+    }
+
+    select.glass-input option {
+      background: #0a0e1a;
+      color: white;
+    }
+
+    /* BUTTONS */
+    .btn-primary {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #f7b731, #ff9f43);
+      color: #0a0e1a;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 20px rgba(247,183,49,0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(247,183,49,0.45);
+    }
+
+    /* SUGGESTIONS */
+    .suggestion-tag {
+      background: rgba(247,183,49,0.12);
+      color: #ffd166;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      cursor: pointer;
+      border: 1px solid rgba(247,183,49,0.25);
+      transition: all 0.2s;
+    }
+
+    .suggestion-tag:hover {
+      background: rgba(247,183,49,0.2);
+    }
+
+    /* ERROR/SUCCESS */
+    .error-msg {
+      color: #ff6b6b;
+      font-size: 13px;
+      margin-bottom: 8px;
+      min-height: 18px;
+    }
+
+    .success-msg {
+      color: #ffd166;
+      font-size: 13px;
+      margin-bottom: 8px;
+      min-height: 18px;
+    }
+
+    /* ITEM GRID */
     .items-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 16px;
       margin-top: 8px;
     }
+
     .item-card {
-      background: white;
-      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      transition: all 0.3s;
       position: relative;
     }
+
     .item-card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+      border-color: rgba(247,183,49,0.25);
     }
-    .item-card.bought-card { opacity: 0.6; }
+
+    .item-card.bought-card { opacity: 0.5; }
+
     .item-card img {
       width: 100%;
       height: 130px;
       object-fit: contain;
-      background: #f9f9f9;
+      background: rgba(255,255,255,0.05);
       padding: 10px;
     }
+
+    .item-emoji {
+      width: 100%;
+      height: 130px;
+      background: rgba(255,255,255,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 52px;
+    }
+
     .item-card-body { padding: 10px 12px 12px; }
+
     .item-card-name {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
-      color: #222;
+      color: white;
       margin-bottom: 4px;
     }
-    .item-card-name.bought { text-decoration: line-through; color: #aaa; }
-    .item-card-meta { font-size: 12px; color: #999; margin-bottom: 10px; }
+
+    .item-card-name.bought {
+      text-decoration: line-through;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .item-card-meta {
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      background: rgba(247,183,49,0.15);
+      color: #ffd166;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 600;
+      border: 1px solid rgba(247,183,49,0.25);
+    }
+
     .item-card-actions { display: flex; gap: 6px; }
+
     .item-card-actions button {
       flex: 1;
       padding: 7px 4px;
@@ -60,24 +333,78 @@
       border-radius: 8px;
       border: none;
       cursor: pointer;
-      font-weight: 600;
-      transition: opacity 0.2s;
+      font-weight: 700;
+      transition: all 0.2s;
     }
-    .item-card-actions button:hover { opacity: 0.85; }
-    .btn-done { background: #E8F5E9; color: #1B5E20; }
-    .btn-del { background: #FFEBEE; color: #c62828; }
+
+    .item-card-actions button:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-done {
+      background: rgba(247,183,49,0.15);
+      color: #ffd166;
+      border: 1px solid rgba(247,183,49,0.25) !important;
+    }
+
+    .btn-del {
+      background: rgba(255,107,107,0.12);
+      color: #ff6b6b;
+      border: 1px solid rgba(255,107,107,0.25) !important;
+    }
+
     .bought-ribbon {
       position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #1B5E20;
-      color: white;
-      font-size: 11px;
-      font-weight: 700;
+      top: 8px;
+      right: 8px;
+      background: linear-gradient(135deg, #f7b731, #ff9f43);
+      color: #0a0e1a;
+      font-size: 10px;
+      font-weight: 800;
       padding: 3px 8px;
       border-radius: 20px;
     }
-    .spinner { text-align: center; padding: 40px; color: #aaa; font-size: 15px; }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .empty-state-emoji { font-size: 48px; display: block; margin-bottom: 12px; }
+    .empty-state-text  { font-size: 14px; }
+
+    .spinner {
+      text-align: center;
+      padding: 40px;
+      color: rgba(255,255,255,0.4);
+      font-size: 15px;
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      background: rgba(10,14,26,0.95);
+      color: white;
+      padding: 14px 22px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+      z-index: 999;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.35s ease;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { border-left: 4px solid #ffd166; }
+    .toast.error   { border-left: 4px solid #ff6b6b; }
+
     @media (max-width: 768px) {
       .page-layout { grid-template-columns: 1fr; }
     }
@@ -85,71 +412,90 @@
 </head>
 <body>
 
+<div class="bg"></div>
+
+<div class="particles">
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <div class="nav">
   <button class="nav-btn" onclick="window.location.href='lists.html'">← Back</button>
-  <span style="font-size:18px; font-weight:700;" id="listTitle">Shopping List</span>
+  <div class="nav-logo">🛒 <span id="listTitle">FlatCart</span></div>
   <button class="nav-btn" onclick="logout()">Logout</button>
 </div>
 
 <div class="page-layout">
+
   <div class="left-panel">
-    <div class="card">
+
+    <div class="glass-card">
       <h2>📊 Progress</h2>
       <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-        <span style="font-size:13px; color:#555;">Items bought</span>
-        <span style="font-size:13px; font-weight:700; color:#1B5E20;" id="progressText">0/0</span>
+        <span style="font-size:13px; color:rgba(255,255,255,0.5);">Items bought</span>
+        <span class="progress-text" id="progressText">0/0</span>
       </div>
       <div class="progress-bar">
         <div class="progress-fill" id="progressFill" style="width:0%"></div>
       </div>
-      <p id="progressMsg" style="font-size:13px; color:#888; margin-top:8px; text-align:center;"></p>
+      <p class="progress-msg" id="progressMsg">Start adding items!</p>
     </div>
 
-    <div class="card">
+    <div class="glass-card">
       <h2>➕ Add Item</h2>
-      <p id="itemError" class="error"></p>
+      <p class="error-msg" id="itemError"></p>
       <label>Item name</label>
-      <input type="text" id="itemName" placeholder="e.g. Milk, Bread..."
+      <input class="glass-input" type="text" id="itemName" placeholder="e.g. Milk, Bread..."
         oninput="searchProduct(this.value)" />
       <div id="suggestions" style="display:none; margin-bottom:12px;">
-        <p style="font-size:12px; color:#888; margin-bottom:6px;">Suggestions:</p>
+        <p style="font-size:12px; color:rgba(255,255,255,0.4); margin-bottom:6px;">Suggestions:</p>
         <div id="suggestionsList" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
       </div>
       <label>Quantity</label>
-      <input type="text" id="itemQuantity" placeholder="e.g. 2 litres, 1 pack" />
+      <input class="glass-input" type="text" id="itemQuantity" placeholder="e.g. 2 litres, 1 pack" />
       <label>Category</label>
-      <select id="itemCategory">
+      <select class="glass-input" id="itemCategory">
         <option value="Food">🥦 Food</option>
         <option value="Toiletries">🧴 Toiletries</option>
         <option value="Other">📦 Other</option>
       </select>
-      <button class="btn-primary" onclick="addItem()">Add to List</button>
+      <button class="btn-primary" onclick="addItem()">Add to List →</button>
     </div>
 
-    <div class="card">
+    <div class="glass-card">
       <h2>👥 Invite Flatmate</h2>
-      <p style="font-size:13px; color:#888; margin-bottom:12px;">
-        Add a flatmate by their username so they can see and edit this list.
+      <p style="font-size:13px; color:rgba(255,255,255,0.4); margin-bottom:12px;">
+        Add a flatmate by username so they can see and edit this list.
       </p>
-      <p id="inviteError" class="error"></p>
-      <p id="inviteSuccess" class="success"></p>
+      <p class="error-msg" id="inviteError"></p>
+      <p class="success-msg" id="inviteSuccess"></p>
       <label>Username</label>
-      <input type="text" id="inviteUsername" placeholder="e.g. sarah123" />
-      <button class="btn-primary" onclick="inviteFlatmate()">Send Invite</button>
+      <input class="glass-input" type="text" id="inviteUsername" placeholder="e.g. sarah123" />
+      <button class="btn-primary" onclick="inviteFlatmate()">Send Invite →</button>
     </div>
+
   </div>
 
   <div class="right-panel">
-    <div class="card">
+    <div class="glass-card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
         <h2 style="margin:0;">🛒 Your Items</h2>
-        <span id="itemCount" style="font-size:13px; color:#888;"></span>
+        <span id="itemCount" style="font-size:13px; color:rgba(255,255,255,0.4);"></span>
       </div>
       <div id="itemsContainer">
         <div class="spinner">⏳ Loading items...</div>
       </div>
     </div>
   </div>
+
 </div>
 
 <script>
@@ -159,18 +505,28 @@
   const listName = localStorage.getItem('currentListName');
   const imageCache = {};
 
-  if (!token || !listId) window.location.href = 'index.html';
+  if (!token || !listId) {
+    window.location.href = 'index.html';
+  }
 
-  document.getElementById('listTitle').textContent = '🛒 ' + listName;
+  document.getElementById('listTitle').textContent = listName;
 
   loadItems();
   setInterval(loadItems, 5000);
+
+  function showToast(message, type) {
+    const toast = document.getElementById('toast');
+    toast.textContent = type === 'success' ? '✅ ' + message : '❌ ' + message;
+    toast.className = 'toast ' + type + ' show';
+    setTimeout(function() { toast.className = 'toast'; }, 3000);
+  }
 
   async function getProductImage(name) {
     if (imageCache[name]) return imageCache[name];
     try {
       const res = await fetch(
-        `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(name)}&search_simple=1&action=process&json=1&page_size=1`
+        'https://world.openfoodfacts.org/cgi/search.pl?search_terms=' +
+        encodeURIComponent(name) + '&search_simple=1&action=process&json=1&page_size=1'
       );
       const data = await res.json();
       if (data.products && data.products.length > 0 && data.products[0].image_front_small_url) {
@@ -183,25 +539,25 @@
 
   function getEmoji(category, name) {
     const n = name.toLowerCase();
-    if (n.includes('milk')) return '🥛';
-    if (n.includes('bread')) return '🍞';
-    if (n.includes('egg')) return '🥚';
-    if (n.includes('apple')) return '🍎';
-    if (n.includes('banana')) return '🍌';
-    if (n.includes('water')) return '💧';
-    if (n.includes('juice')) return '🧃';
-    if (n.includes('cheese')) return '🧀';
-    if (n.includes('butter')) return '🧈';
-    if (n.includes('coffee')) return '☕';
-    if (n.includes('tea')) return '🍵';
-    if (n.includes('rice')) return '🍚';
-    if (n.includes('pasta')) return '🍝';
-    if (n.includes('chicken')) return '🍗';
+    if (n.includes('milk'))     return '🥛';
+    if (n.includes('bread'))    return '🍞';
+    if (n.includes('egg'))      return '🥚';
+    if (n.includes('apple'))    return '🍎';
+    if (n.includes('banana'))   return '🍌';
+    if (n.includes('water'))    return '💧';
+    if (n.includes('juice'))    return '🧃';
+    if (n.includes('cheese'))   return '🧀';
+    if (n.includes('butter'))   return '🧈';
+    if (n.includes('coffee'))   return '☕';
+    if (n.includes('tea'))      return '🍵';
+    if (n.includes('rice'))     return '🍚';
+    if (n.includes('pasta'))    return '🍝';
+    if (n.includes('chicken'))  return '🍗';
     if (n.includes('beef') || n.includes('meat')) return '🥩';
-    if (n.includes('fish')) return '🐟';
-    if (n.includes('tomato')) return '🍅';
-    if (n.includes('potato')) return '🥔';
-    if (n.includes('onion')) return '🧅';
+    if (n.includes('fish'))     return '🐟';
+    if (n.includes('tomato'))   return '🍅';
+    if (n.includes('potato'))   return '🥔';
+    if (n.includes('onion'))    return '🧅';
     if (n.includes('shampoo') || n.includes('soap')) return '🧴';
     if (n.includes('toothpaste') || n.includes('tooth')) return '🪥';
     if (category === 'Toiletries') return '🧴';
@@ -209,18 +565,18 @@
   }
 
   async function loadItems() {
-    const res = await fetch(`${API}/items/${listId}`, {
-      headers: { 'Authorization': `Bearer ${token}` }
+    const res = await fetch(API + '/items/' + listId, {
+      headers: { 'Authorization': 'Bearer ' + token }
     });
     const items = await res.json();
     const container = document.getElementById('itemsContainer');
 
     if (!Array.isArray(items) || items.length === 0) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <span class="empty-state-emoji">🛒</span>
-          <p class="empty-state-text">No items yet. Add your first item!</p>
-        </div>`;
+      container.innerHTML =
+        '<div class="empty-state">' +
+          '<span class="empty-state-emoji">🛒</span>' +
+          '<p class="empty-state-text">No items yet. Add your first item!</p>' +
+        '</div>';
       document.getElementById('progressText').textContent = '0/0';
       document.getElementById('progressFill').style.width = '0%';
       document.getElementById('itemCount').textContent = '';
@@ -228,92 +584,95 @@
       return;
     }
 
-    const bought = items.filter(i => i.bought).length;
+    const bought = items.filter(function(i) { return i.bought; }).length;
     const total = items.length;
     const percent = Math.round((bought / total) * 100);
-    document.getElementById('progressText').textContent = `${bought}/${total}`;
-    document.getElementById('progressFill').style.width = `${percent}%`;
-    document.getElementById('itemCount').textContent = `${total} item${total !== 1 ? 's' : ''}`;
+    document.getElementById('progressText').textContent = bought + '/' + total;
+    document.getElementById('progressFill').style.width = percent + '%';
+    document.getElementById('itemCount').textContent = total + ' item' + (total !== 1 ? 's' : '');
     document.getElementById('progressMsg').textContent = percent === 100
       ? '🎉 All done! Great shopping!'
-      : `${total - bought} item${total - bought !== 1 ? 's' : ''} left to buy`;
+      : (total - bought) + ' item' + (total - bought !== 1 ? 's' : '') + ' left to buy';
 
     container.innerHTML = '<div class="items-grid" id="itemsGrid"></div>';
     const grid = document.getElementById('itemsGrid');
 
-    for (const item of items) {
-      const card = document.createElement('div');
-      card.className = `item-card ${item.bought ? 'bought-card' : ''}`;
-      card.id = `item-${item._id}`;
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+      var card = document.createElement('div');
+      card.className = 'item-card' + (item.bought ? ' bought-card' : '');
+      card.id = 'item-' + item._id;
 
-      const emoji = getEmoji(item.category, item.name);
-      const catClass = { Food: 'cat-food', Toiletries: 'cat-toiletries', Other: 'cat-other' };
+      var emoji = getEmoji(item.category, item.name);
 
-      card.innerHTML = `
-        <div style="width:100%; height:130px; background:#f9f9f9; display:flex; align-items:center; justify-content:center; font-size:52px;">
-          ${emoji}
-        </div>
-        <div class="item-card-body">
-          <div class="item-card-name ${item.bought ? 'bought' : ''}">${item.name}</div>
-          <div class="item-card-meta">
-            📦 ${item.quantity} · <span class="badge ${catClass[item.category] || ''}">${item.category}</span><br/>
-            👤 ${item.addedBy?.username || 'someone'}
-          </div>
-          <div class="item-card-actions">
-            <button class="btn-done" onclick="toggleBought('${item._id}')">
-              ${item.bought ? '↩ Undo' : '✅ Done'}
-            </button>
-            <button class="btn-del" onclick="deleteItem('${item._id}')">🗑️</button>
-          </div>
-        </div>
-        ${item.bought ? '<div class="bought-ribbon">✓ Bought</div>' : ''}
-      `;
+      card.innerHTML =
+        '<div class="item-emoji">' + emoji + '</div>' +
+        '<div class="item-card-body">' +
+          '<div class="item-card-name' + (item.bought ? ' bought' : '') + '">' + item.name + '</div>' +
+          '<div class="item-card-meta">' +
+            '📦 ' + item.quantity + ' · ' +
+            '<span class="badge">' + item.category + '</span><br/>' +
+            '👤 ' + ((item.addedBy && item.addedBy.username) ? item.addedBy.username : 'someone') +
+          '</div>' +
+          '<div class="item-card-actions">' +
+            '<button class="btn-done" onclick="toggleBought(\'' + item._id + '\')">' +
+              (item.bought ? '↩ Undo' : '✅ Done') +
+            '</button>' +
+            '<button class="btn-del" onclick="deleteItem(\'' + item._id + '\')">🗑️</button>' +
+          '</div>' +
+        '</div>' +
+        (item.bought ? '<div class="bought-ribbon">✓ Bought</div>' : '');
 
       grid.appendChild(card);
 
       if (item.category === 'Food') {
-        getProductImage(item.name).then(imgUrl => {
-          if (imgUrl) {
-            const placeholder = card.querySelector('div[style*="font-size:52px"]');
-            if (placeholder) {
-              placeholder.outerHTML = `<img src="${imgUrl}" alt="${item.name}" onerror="this.style.display='none'" />`;
+        (function(c, n) {
+          getProductImage(n).then(function(imgUrl) {
+            if (imgUrl) {
+              var placeholder = c.querySelector('.item-emoji');
+              if (placeholder) {
+                var img = document.createElement('img');
+                img.src = imgUrl;
+                img.alt = n;
+                img.onerror = function() { this.style.display = 'none'; };
+                placeholder.parentNode.replaceChild(img, placeholder);
+              }
             }
-          }
-        });
+          });
+        })(card, item.name);
       }
     }
   }
 
-  let searchTimeout;
-  async function searchProduct(query) {
+  var searchTimeout;
+  function searchProduct(query) {
     clearTimeout(searchTimeout);
     if (query.length < 2) {
       document.getElementById('suggestions').style.display = 'none';
       return;
     }
-    searchTimeout = setTimeout(async () => {
-      try {
-        const res = await fetch(
-          `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=5`
-        );
-        const data = await res.json();
-        if (data.products && data.products.length > 0) {
-          const names = [...new Set(data.products
-            .map(p => p.product_name)
-            .filter(n => n && n.length > 0)
-            .slice(0, 5)
-          )];
-          if (names.length > 0) {
-            document.getElementById('suggestions').style.display = 'block';
-            document.getElementById('suggestionsList').innerHTML = names.map(name => `
-              <span onclick="selectSuggestion('${name.replace(/'/g, '')}')"
-                style="background:#E8F5E9; color:#1B5E20; padding:4px 10px; border-radius:20px; font-size:12px; cursor:pointer; border:1px solid #A5D6A7;">
-                ${name}
-              </span>
-            `).join('');
+    searchTimeout = setTimeout(function() {
+      fetch('https://world.openfoodfacts.org/cgi/search.pl?search_terms=' +
+        encodeURIComponent(query) + '&search_simple=1&action=process&json=1&page_size=5')
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          if (data.products && data.products.length > 0) {
+            var names = [];
+            data.products.forEach(function(p) {
+              if (p.product_name && p.product_name.length > 0 && names.indexOf(p.product_name) === -1) {
+                names.push(p.product_name);
+              }
+            });
+            names = names.slice(0, 5);
+            if (names.length > 0) {
+              document.getElementById('suggestions').style.display = 'block';
+              document.getElementById('suggestionsList').innerHTML = names.map(function(name) {
+                return '<span class="suggestion-tag" onclick="selectSuggestion(\'' +
+                  name.replace(/'/g, '') + '\')">' + name + '</span>';
+              }).join('');
+            }
           }
-        }
-      } catch (e) {}
+        }).catch(function() {});
     }, 400);
   }
 
@@ -323,22 +682,22 @@
   }
 
   async function addItem() {
-    const name = document.getElementById('itemName').value.trim();
-    const quantity = document.getElementById('itemQuantity').value.trim() || '1';
-    const category = document.getElementById('itemCategory').value;
+    var name = document.getElementById('itemName').value.trim();
+    var quantity = document.getElementById('itemQuantity').value.trim() || '1';
+    var category = document.getElementById('itemCategory').value;
 
     if (!name) {
       document.getElementById('itemError').textContent = 'Please enter an item name';
       return;
     }
 
-    const res = await fetch(`${API}/items`, {
+    var res = await fetch(API + '/items', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'Authorization': 'Bearer ' + token
       },
-      body: JSON.stringify({ name, quantity, category, listId })
+      body: JSON.stringify({ name: name, quantity: quantity, category: category, listId: listId })
     });
 
     if (res.ok) {
@@ -346,64 +705,68 @@
       document.getElementById('itemQuantity').value = '';
       document.getElementById('itemError').textContent = '';
       document.getElementById('suggestions').style.display = 'none';
+      showToast('Item added!', 'success');
       loadItems();
     }
   }
 
   async function toggleBought(id) {
-    await fetch(`${API}/items/${id}/bought`, {
+    await fetch(API + '/items/' + id + '/bought', {
       method: 'PATCH',
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { 'Authorization': 'Bearer ' + token }
     });
     loadItems();
   }
 
   function deleteItem(id) {
-    const card = document.getElementById(`item-${id}`);
-    card.innerHTML = `
-      <div style="padding:16px; text-align:center;">
-        <p style="font-size:14px; color:#c62828; font-weight:600; margin-bottom:12px;">⚠️ Delete this item?</p>
-        <div style="display:flex; gap:8px; justify-content:center;">
-          <button onclick="confirmDeleteItem('${id}')"
-            style="padding:8px 16px; border:none; border-radius:8px; cursor:pointer; background:#FFEBEE; color:#c62828; font-weight:600;">
-            Yes, delete
-          </button>
-          <button onclick="loadItems()"
-            style="padding:8px 16px; border:none; border-radius:8px; cursor:pointer; background:#E8F5E9; color:#1B5E20; font-weight:600;">
-            Cancel
-          </button>
-        </div>
-      </div>
-    `;
+    var card = document.getElementById('item-' + id);
+    card.innerHTML =
+      '<div style="padding:16px; text-align:center;">' +
+        '<p style="font-size:14px; color:#ff6b6b; font-weight:600; margin-bottom:12px;">⚠️ Delete this item?</p>' +
+        '<div style="display:flex; gap:8px; justify-content:center;">' +
+          '<button onclick="confirmDeleteItem(\'' + id + '\')" ' +
+            'style="padding:8px 16px; border:none; border-radius:8px; cursor:pointer; ' +
+            'background:rgba(255,107,107,0.15); color:#ff6b6b; font-weight:700; border:1px solid rgba(255,107,107,0.3);">' +
+            'Yes, delete' +
+          '</button>' +
+          '<button onclick="loadItems()" ' +
+            'style="padding:8px 16px; border:none; border-radius:8px; cursor:pointer; ' +
+            'background:rgba(247,183,49,0.15); color:#ffd166; font-weight:700; border:1px solid rgba(247,183,49,0.3);">' +
+            'Cancel' +
+          '</button>' +
+        '</div>' +
+      '</div>';
   }
 
   async function confirmDeleteItem(id) {
-    await fetch(`${API}/items/${id}`, {
+    await fetch(API + '/items/' + id, {
       method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { 'Authorization': 'Bearer ' + token }
     });
+    showToast('Item deleted', 'success');
     loadItems();
   }
 
   async function inviteFlatmate() {
-    const username = document.getElementById('inviteUsername').value.trim();
+    var username = document.getElementById('inviteUsername').value.trim();
     if (!username) {
       document.getElementById('inviteError').textContent = 'Please enter a username';
       return;
     }
-    const res = await fetch(`${API}/lists/${listId}/invite`, {
+    var res = await fetch(API + '/lists/' + listId + '/invite', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'Authorization': 'Bearer ' + token
       },
-      body: JSON.stringify({ username })
+      body: JSON.stringify({ username: username })
     });
-    const data = await res.json();
+    var data = await res.json();
     if (res.ok) {
       document.getElementById('inviteSuccess').textContent = '✅ Flatmate added!';
       document.getElementById('inviteError').textContent = '';
       document.getElementById('inviteUsername').value = '';
+      showToast('Flatmate added!', 'success');
     } else {
       document.getElementById('inviteError').textContent = data.message;
       document.getElementById('inviteSuccess').textContent = '';

@@ -3,62 +3,406 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Lists</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>FlatCart — Login</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0a0e1a;
+      overflow: hidden;
+    }
+
+    .bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      background: radial-gradient(ellipse at 20% 50%, rgba(30,80,200,0.3) 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 20%, rgba(100,20,200,0.2) 0%, transparent 50%),
+                  radial-gradient(ellipse at 60% 80%, rgba(0,150,255,0.2) 0%, transparent 50%);
+    }
+
+    .particles {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: rgba(100,180,255,0.6);
+      border-radius: 50%;
+      animation: floatParticle linear infinite;
+    }
+
+    .particle:nth-child(1)  { left: 10%; animation-duration: 15s; animation-delay: 0s;   width: 4px; height: 4px; }
+    .particle:nth-child(2)  { left: 20%; animation-duration: 12s; animation-delay: 2s; }
+    .particle:nth-child(3)  { left: 30%; animation-duration: 18s; animation-delay: 1s;   width: 5px; height: 5px; }
+    .particle:nth-child(4)  { left: 45%; animation-duration: 14s; animation-delay: 3s; }
+    .particle:nth-child(5)  { left: 55%; animation-duration: 16s; animation-delay: 0.5s; width: 4px; height: 4px; }
+    .particle:nth-child(6)  { left: 65%; animation-duration: 11s; animation-delay: 2.5s; }
+    .particle:nth-child(7)  { left: 75%; animation-duration: 19s; animation-delay: 1.5s; }
+    .particle:nth-child(8)  { left: 85%; animation-duration: 13s; animation-delay: 4s; }
+    .particle:nth-child(9)  { left: 92%; animation-duration: 17s; animation-delay: 0.8s; width: 5px; height: 5px; }
+    .particle:nth-child(10) { left: 5%;  animation-duration: 20s; animation-delay: 3.5s; }
+
+    @keyframes floatParticle {
+      0%   { transform: translateY(110vh); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { transform: translateY(-10vh);  opacity: 0; }
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .hero-side {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 70px 60px;
+      color: white;
+      animation: fadeInLeft 0.7s ease;
+    }
+
+    @keyframes fadeInLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+
+    .logo-icon {
+      font-size: 40px;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-10px); }
+    }
+
+    .logo-text {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #ffffff, #a8d8ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-title {
+      font-size: 54px;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #ffffff, #a8d8ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, #ffd166, #ff9f43);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 40px;
+      line-height: 1.8;
+    }
+
+    .features {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 14px 18px;
+      transition: all 0.2s;
+    }
+
+    .feature-item:hover {
+      transform: translateX(8px);
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(247,183,49,0.3);
+    }
+
+    .feature-icon { font-size: 22px; }
+
+    .feature-text {
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+      font-weight: 500;
+    }
+
+    .auth-side {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      animation: fadeInRight 0.7s ease;
+    }
+
+    @keyframes fadeInRight {
+      from { opacity: 0; transform: translateX(30px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .auth-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 24px;
+      padding: 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+
+    .auth-card h2 {
+      color: white;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .auth-subtitle {
+      color: rgba(255,255,255,0.45);
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+
+    .tabs {
+      display: flex;
+      background: rgba(0,0,0,0.3);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 24px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 8px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.45);
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, rgba(247,183,49,0.2), rgba(255,159,67,0.1));
+      color: #ffd166;
+      border: 1px solid rgba(247,183,49,0.3);
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 6px;
+    }
+
+    .glass-input {
+      width: 100%;
+      padding: 13px 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      color: white;
+      font-size: 15px;
+      outline: none;
+      transition: all 0.2s;
+      margin-bottom: 16px;
+    }
+
+    .glass-input::placeholder { color: rgba(255,255,255,0.3); }
+
+    .glass-input:focus {
+      border-color: #ffd166;
+      background: rgba(255,255,255,0.09);
+      box-shadow: 0 0 0 3px rgba(255,209,102,0.1);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #f7b731, #ff9f43);
+      color: #0a0e1a;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 20px rgba(247,183,49,0.35);
+      margin-top: 4px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(247,183,49,0.5);
+    }
+
+    .btn-primary:active { transform: translateY(0); }
+
+    .error-msg {
+      color: #ff6b6b;
+      font-size: 13px;
+      margin-bottom: 12px;
+      min-height: 18px;
+      text-align: center;
+    }
+
+    .success-msg {
+      color: #ffd166;
+      font-size: 13px;
+      margin-bottom: 12px;
+      min-height: 18px;
+      text-align: center;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      background: rgba(10,14,26,0.95);
+      color: white;
+      padding: 14px 22px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+      z-index: 999;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.35s ease;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { border-left: 4px solid #ffd166; }
+    .toast.error   { border-left: 4px solid #ff6b6b; }
+
+    @media (max-width: 900px) {
+      .page { grid-template-columns: 1fr; }
+      .hero-side { display: none; }
+      .auth-side { padding: 30px 20px; }
+      body { overflow-y: auto; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- Navbar -->
-<div class="nav">
-  <span style="font-size:18px; font-weight:700;">🛒 ShopList</span>
-  <div style="display:flex; align-items:center; gap:12px;">
-    <span style="font-size:14px; opacity:0.8;">👤 <span id="navUsername"></span></span>
-    <button class="nav-btn" onclick="logout()">Logout</button>
-  </div>
+<div class="bg"></div>
+
+<div class="particles">
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
 </div>
 
-<div class="container">
+<div class="toast" id="toast"></div>
 
-  <!-- Hero -->
-  <div class="hero">
-    <span class="hero-emoji">🛒</span>
-    <div class="hero-title">Your Shopping Lists</div>
-    <div class="hero-sub">Stay in sync with your flatmates</div>
-  </div>
+<div class="page">
 
-  <!-- Stats -->
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-number" id="totalLists">0</div>
-      <div class="stat-label">Total Lists</div>
+  <div class="hero-side">
+    <div class="logo">
+      <span class="logo-icon">🛒</span>
+      <span class="logo-text">FlatCart</span>
     </div>
-    <div class="stat-card">
-      <div class="stat-number">👥</div>
-      <div class="stat-label">Shared</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-number">✅</div>
-      <div class="stat-label">Active</div>
-    </div>
-  </div>
-
-  <!-- Create new list -->
-  <div class="card">
-    <h2>➕ New List</h2>
-    <p id="listError" class="error"></p>
-    <div class="input-row">
-      <input type="text" id="listName" placeholder="e.g. Weekly Shop, Party Supplies..." />
-      <button class="btn-primary" onclick="createList()">Create</button>
+    <h1 class="hero-title">Shopping<br/>made <span>simple</span><br/>together.</h1>
+    <p class="hero-sub">Share lists with your flatmates,<br/>tick off items in real time,<br/>never forget anything again.</p>
+    <div class="features">
+      <div class="feature-item">
+        <span class="feature-icon">👥</span>
+        <span class="feature-text">Invite flatmates to share lists instantly</span>
+      </div>
+      <div class="feature-item">
+        <span class="feature-icon">🔄</span>
+        <span class="feature-text">Auto-updates every 5 seconds</span>
+      </div>
+      <div class="feature-item">
+        <span class="feature-icon">🖼️</span>
+        <span class="feature-text">Real product images from Open Food Facts</span>
+      </div>
+      <div class="feature-item">
+        <span class="feature-icon">🔒</span>
+        <span class="feature-text">Secure login with JWT authentication</span>
+      </div>
     </div>
   </div>
 
-  <!-- All lists -->
-  <div class="card">
-    <h2>📋 Your Lists</h2>
-    <div id="listsContainer">
-      <div class="empty-state">
-        <span class="empty-state-emoji">📝</span>
-        <p class="empty-state-text">Loading your lists...</p>
+  <div class="auth-side">
+    <div class="auth-card">
+      <h2>Welcome to FlatCart 🛒</h2>
+      <p class="auth-subtitle">Sign in or create your account below</p>
+
+      <div class="tabs">
+        <div class="tab active" onclick="showTab('login')">Login</div>
+        <div class="tab" onclick="showTab('register')">Register</div>
+      </div>
+
+      <div id="loginForm">
+        <p class="error-msg" id="loginError"></p>
+        <label>Email</label>
+        <input class="glass-input" type="email" id="loginEmail" placeholder="your@email.com" />
+        <label>Password</label>
+        <input class="glass-input" type="password" id="loginPassword" placeholder="••••••••" />
+        <button class="btn-primary" onclick="login()">Login →</button>
+      </div>
+
+      <div id="registerForm" style="display:none;">
+        <p class="error-msg" id="registerError"></p>
+        <p class="success-msg" id="registerSuccess"></p>
+        <label>Username</label>
+        <input class="glass-input" type="text" id="regUsername" placeholder="e.g. harnoor" />
+        <label>Email</label>
+        <input class="glass-input" type="email" id="regEmail" placeholder="your@email.com" />
+        <label>Password</label>
+        <input class="glass-input" type="password" id="regPassword" placeholder="Min 6 characters" />
+        <button class="btn-primary" onclick="register()">Create Account →</button>
       </div>
     </div>
   </div>
@@ -66,104 +410,96 @@
 </div>
 
 <script>
-  const API = 'http://localhost:3000/api';
-  const token = localStorage.getItem('token');
-  const username = localStorage.getItem('username');
+const API = 'http://localhost:3000/api';
+const token = localStorage.getItem('token');
 
-  if (!token) window.location.href = 'index.html';
+if (!token) {
+  window.location.href = 'index.html';
+}
 
-  document.getElementById('navUsername').textContent = username;
+console.log('Token found:', token);
 
+document.addEventListener('DOMContentLoaded', function() {
   loadLists();
+});
 
-  async function loadLists() {
-    const res = await fetch(`${API}/lists`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-
-    const lists = await res.json();
-    const container = document.getElementById('listsContainer');
-
-    if (!Array.isArray(lists) || lists.length === 0) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <span class="empty-state-emoji">🛒</span>
-          <p class="empty-state-text">No lists yet. Create your first one above!</p>
-        </div>`;
-      document.getElementById('totalLists').textContent = '0';
-      return;
-    }
-
-    document.getElementById('totalLists').textContent = lists.length;
-
-    container.innerHTML = lists.map(list => `
-  <div class="list-card" id="list-${list._id}">
-        <div>
-          <div class="list-card-name">📋 ${list.name}</div>
-          <div class="list-card-date">📅 ${new Date(list.createdAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })}</div>
-        </div>
-        <div class="btn-group">
-          <button class="btn-secondary" onclick="openList('${list._id}', '${list.name}')">Open →</button>
-          <button class="btn-danger" onclick="deleteList('${list._id}')">🗑️</button>
-        </div>
-      </div>
-    `).join('');
+  function showToast(message, type) {
+    const toast = document.getElementById('toast');
+    toast.textContent = type === 'success' ? '✅ ' + message : '❌ ' + message;
+    toast.className = 'toast ' + type + ' show';
+    setTimeout(function() { toast.className = 'toast'; }, 3000);
   }
 
-  async function createList() {
-    const name = document.getElementById('listName').value.trim();
-    if (!name) {
-      document.getElementById('listError').textContent = 'Please enter a list name';
+  function showTab(tab) {
+    if (tab === 'login') {
+      document.getElementById('loginForm').style.display = 'block';
+      document.getElementById('registerForm').style.display = 'none';
+    } else {
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('registerForm').style.display = 'block';
+    }
+    document.querySelectorAll('.tab').forEach(function(t, i) {
+      if ((tab === 'login' && i === 0) || (tab === 'register' && i === 1)) {
+        t.classList.add('active');
+      } else {
+        t.classList.remove('active');
+      }
+    });
+  }
+
+  async function login() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    if (!email || !password) {
+      showToast('Please fill in all fields', 'error');
       return;
     }
-
-    const res = await fetch(`${API}/lists`, {
+    const res = await fetch(API + '/auth/login', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({ name })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, password: password })
     });
-
+    const data = await res.json();
     if (res.ok) {
-      document.getElementById('listName').value = '';
-      document.getElementById('listError').textContent = '';
-      loadLists();
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('username', data.username);
+      localStorage.setItem('userId', data.userId);
+      showToast('Welcome back! 👋', 'success');
+      setTimeout(function() { window.location.href = 'lists.html'; }, 1000);
+    } else {
+      showToast(data.message, 'error');
     }
   }
 
-function deleteList(id) {
-  // Show inline confirmation instead of browser popup
-  const card = document.getElementById(`list-${id}`);
-  card.innerHTML = `
-    <div style="display:flex; justify-content:space-between; align-items:center; padding: 4px 0;">
-      <span style="font-size:14px; color:#c62828; font-weight:600;">⚠️ Delete this list?</span>
-      <div class="btn-group">
-        <button class="btn-danger" onclick="confirmDelete('${id}')">Yes, delete</button>
-        <button class="btn-secondary" onclick="loadLists()">Cancel</button>
-      </div>
-    </div>
-  `;
-}
+  async function register() {
+    const username = document.getElementById('regUsername').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value;
+    if (!username || !email || !password) {
+      showToast('Please fill in all fields', 'error');
+      return;
+    }
+    const res = await fetch(API + '/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: username, email: email, password: password })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      showToast('Account created! Please login 🎉', 'success');
+      setTimeout(function() { showTab('login'); }, 1500);
+    } else {
+      showToast(data.message, 'error');
+    }
+  }
 
-async function confirmDelete(id) {
-  await fetch(`${API}/lists/${id}`, {
-    method: 'DELETE',
-    headers: { 'Authorization': `Bearer ${token}` }
+  document.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      const activeTab = document.querySelector('.tab.active').textContent;
+      if (activeTab === 'Login') login();
+      else register();
+    }
   });
-  loadLists();
-}
-  function openList(id, name) {
-    localStorage.setItem('currentListId', id);
-    localStorage.setItem('currentListName', name);
-    window.location.href = 'shopping.html';
-  }
-
-  function logout() {
-    localStorage.clear();
-    window.location.href = 'index.html';
-  }
 </script>
 
 </body>
