@@ -420,13 +420,13 @@
 <script>
   var API = 'http://localhost:3000/api';
 
-  // Check if user is already logged in
+
   var savedToken = localStorage.getItem('token');
   if (savedToken) {
     window.location.href = 'lists.html';
   }
 
-  // Show toast notification
+  
   function showToast(message, type) {
     var toast = document.getElementById('toast');
     if (type === 'success') {
@@ -440,7 +440,7 @@
     }, 3000);
   }
 
-  // Switch between login and register tabs
+
   function showTab(tab) {
     if (tab === 'login') {
       document.getElementById('loginForm').style.display = 'block';
@@ -459,7 +459,7 @@
     });
   }
 
-  // Login function
+  
   async function login() {
     var email = document.getElementById('loginEmail').value.trim();
     var password = document.getElementById('loginPassword').value;
@@ -490,7 +490,7 @@
     }
   }
 
-  // Register function
+ 
   async function register() {
     var username = document.getElementById('regUsername').value.trim();
     var email = document.getElementById('regEmail').value.trim();
@@ -519,7 +519,7 @@
     }
   }
 
-  // Submit form when Enter key is pressed
+  
   document.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
       var activeTab = document.querySelector('.tab.active').textContent;

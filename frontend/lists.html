@@ -477,20 +477,20 @@
 <script>
   var API = 'http://localhost:3000/api';
 
-  // Get token and username from browser storage
+  
   var token = localStorage.getItem('token');
   var username = localStorage.getItem('username');
 
-  // If no token found, send user back to login page
+  
   if (!token) {
     window.location.href = 'index.html';
   } else {
-    // Token exists so show username and load lists
+ 
     document.getElementById('navUsername').textContent = username;
     loadLists();
   }
 
-  // Show toast notification at bottom of screen
+  
   function showToast(message, type) {
     var toast = document.getElementById('toast');
     if (type === 'success') {
@@ -504,7 +504,7 @@
     }, 3000);
   }
 
-  // Load all lists from the backend
+  
   async function loadLists() {
     var response = await fetch(API + '/lists', {
       headers: { 'Authorization': 'Bearer ' + token }
@@ -513,17 +513,17 @@
     var lists = await response.json();
     var container = document.getElementById('listsContainer');
 
-    // If no lists found show empty message
+
     if (!Array.isArray(lists) || lists.length === 0) {
       container.innerHTML = '<p class="empty-msg">🛒 No lists yet. Create your first one!</p>';
       document.getElementById('totalLists').textContent = '0';
       return;
     }
 
-    // Update the total lists count
+    
     document.getElementById('totalLists').textContent = lists.length;
 
-    // Build the HTML for each list
+   
     var html = '';
     for (var i = 0; i < lists.length; i++) {
       var list = lists[i];
@@ -546,7 +546,7 @@
     container.innerHTML = html;
   }
 
-  // Create a new list
+  
   async function createList() {
     var name = document.getElementById('listName').value.trim();
 
@@ -575,7 +575,7 @@
     }
   }
 
-  // Show delete confirmation inside the row
+ 
   function deleteList(id) {
     var row = document.getElementById('list-' + id);
     row.innerHTML = '<div style="display:flex; justify-content:space-between; align-items:center; width:100%;">'
@@ -587,7 +587,7 @@
       + '</div>';
   }
 
-  // Actually delete the list after confirmation
+  
   async function confirmDelete(id) {
     await fetch(API + '/lists/' + id, {
       method: 'DELETE',
@@ -597,14 +597,13 @@
     loadLists();
   }
 
-  // Open a list and go to shopping page
   function openList(id, name) {
     localStorage.setItem('currentListId', id);
     localStorage.setItem('currentListName', name);
     window.location.href = 'shopping.html';
   }
 
-  // Logout and clear saved data
+
   function logout() {
     localStorage.clear();
     window.location.href = 'index.html';
