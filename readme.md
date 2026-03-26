@@ -2,11 +2,8 @@
 
 A web application that allows flatmates to collaboratively manage shopping lists in real time.
 
-## 👥 Team
-- Harnoor Singh
-- 
 
-## 📋 Features
+## Features
 - User registration and login with JWT authentication
 - Create and manage multiple shopping lists
 - Add items with name, quantity and category
@@ -16,7 +13,7 @@ A web application that allows flatmates to collaboratively manage shopping lists
 - Auto refresh every 5 seconds
 - Input validation and security
 
-## 🛠️ Tech Stack
+##  Tech Stack
 - **Frontend:** HTML, CSS, JavaScript
 - **Backend:** Node.js, Express.js
 - **Database:** MongoDB with Mongoose
@@ -34,13 +31,6 @@ docker-compose up --build
 ```
 App runs at http://localhost:3000
 
-### Option 2 — Without Docker
-1. Install dependencies:
-```bash
-cd backend
-npm install
-```
-
 2. Make sure MongoDB is running:
 ```bash
 brew services start mongodb-community
@@ -53,19 +43,19 @@ npm run dev
 
 4. Open `frontend/index.html` with Live Server in VS Code
 
-## 🧪 Running Tests
-```bash
+## Running Tests
+bash 
 cd backend
 npm test
-```
 
-## 🔒 Security
+
+## Security
 - Passwords hashed with bcryptjs
 - JWT tokens for authentication
 - Input validation on all routes
 - Protected API endpoints
 
-## 🧪 Test Coverage
+## Test Coverage
 
   - User registration validation
   - Login authentication
