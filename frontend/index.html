@@ -3,55 +3,69 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FlatCart</title>
+  <title>FlatCart — Login</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
       min-height: 100vh;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(-45deg, #023e8a, #0077b6, #0096c7, #00b4d8);
-      background-size: 400% 400%;
-      animation: gradientShift 8s ease infinite;
+      background: #0a0e1a;
+      overflow: hidden;
     }
 
-    @keyframes gradientShift {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    .bubbles {
+    .bg {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      background: radial-gradient(ellipse at 20% 50%, rgba(30,80,200,0.3) 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 20%, rgba(100,20,200,0.2) 0%, transparent 50%),
+                  radial-gradient(ellipse at 60% 80%, rgba(0,150,255,0.2) 0%, transparent 50%);
+    }
+
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
       pointer-events: none;
       overflow: hidden;
-      z-index: 0;
     }
 
-    .bubble {
+    .particle {
       position: absolute;
-      bottom: -100px;
-      background: rgba(255,255,255,0.07);
+      width: 3px;
+      height: 3px;
+      background: rgba(100,180,255,0.6);
       border-radius: 50%;
-      animation: floatUp linear infinite;
+      animation: floatParticle linear infinite;
     }
 
-    .bubble:nth-child(1)  { width:40px;  height:40px;  left:5%;  animation-duration:8s;  animation-delay:0s; }
-    .bubble:nth-child(2)  { width:20px;  height:20px;  left:15%; animation-duration:6s;  animation-delay:1s; }
-    .bubble:nth-child(3)  { width:60px;  height:60px;  left:25%; animation-duration:10s; animation-delay:2s; }
-    .bubble:nth-child(4)  { width:30px;  height:30px;  left:40%; animation-duration:7s;  animation-delay:0.5s; }
-    .bubble:nth-child(5)  { width:80px;  height:80px;  left:55%; animation-duration:12s; animation-delay:1.5s; }
-    .bubble:nth-child(6)  { width:25px;  height:25px;  left:65%; animation-duration:9s;  animation-delay:3s; }
-    .bubble:nth-child(7)  { width:50px;  height:50px;  left:75%; animation-duration:11s; animation-delay:0.8s; }
-    .bubble:nth-child(8)  { width:35px;  height:35px;  left:85%; animation-duration:7s;  animation-delay:2.5s; }
-    .bubble:nth-child(9)  { width:15px;  height:15px;  left:92%; animation-duration:6s;  animation-delay:1s; }
-    .bubble:nth-child(10) { width:45px;  height:45px;  left:10%; animation-duration:9s;  animation-delay:4s; }
+    .particle:nth-child(1)  { left: 10%; animation-duration: 15s; animation-delay: 0s; width: 4px; height: 4px; }
+    .particle:nth-child(2)  { left: 20%; animation-duration: 12s; animation-delay: 2s; }
+    .particle:nth-child(3)  { left: 30%; animation-duration: 18s; animation-delay: 1s; width: 5px; height: 5px; }
+    .particle:nth-child(4)  { left: 45%; animation-duration: 14s; animation-delay: 3s; }
+    .particle:nth-child(5)  { left: 55%; animation-duration: 16s; animation-delay: 0.5s; width: 4px; height: 4px; }
+    .particle:nth-child(6)  { left: 65%; animation-duration: 11s; animation-delay: 2.5s; }
+    .particle:nth-child(7)  { left: 75%; animation-duration: 19s; animation-delay: 1.5s; }
+    .particle:nth-child(8)  { left: 85%; animation-duration: 13s; animation-delay: 4s; }
+    .particle:nth-child(9)  { left: 92%; animation-duration: 17s; animation-delay: 0.8s; width: 5px; height: 5px; }
+    .particle:nth-child(10) { left: 5%;  animation-duration: 20s; animation-delay: 3.5s; }
 
-    @keyframes floatUp {
-      0%   { transform: translateY(0) rotate(0deg);      opacity: 0.8; }
-      100% { transform: translateY(-110vh) rotate(720deg); opacity: 0; }
+    @keyframes floatParticle {
+      0%   { transform: translateY(110vh); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { transform: translateY(-10vh); opacity: 0; }
     }
 
     .page {
@@ -66,8 +80,14 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 60px;
+      padding: 70px 60px;
       color: white;
+      animation: fadeInLeft 0.7s ease;
+    }
+
+    @keyframes fadeInLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to   { opacity: 1; transform: translateX(0); }
     }
 
     .logo {
@@ -91,7 +111,10 @@
       font-size: 30px;
       font-weight: 800;
       letter-spacing: 2px;
-      color: white;
+      background: linear-gradient(135deg, #ffffff, #a8d8ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .hero-title {
@@ -99,13 +122,22 @@
       font-weight: 800;
       line-height: 1.15;
       margin-bottom: 20px;
+      background: linear-gradient(135deg, #ffffff, #a8d8ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
-    .hero-title span { color: #87CEEB; }
+    .hero-title span {
+      background: linear-gradient(135deg, #ffd166, #ff9f43);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
 
     .hero-sub {
       font-size: 17px;
-      color: rgba(255,255,255,0.75);
+      color: rgba(255,255,255,0.6);
       margin-bottom: 40px;
       line-height: 1.8;
     }
@@ -120,33 +152,49 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
       border-radius: 14px;
       padding: 14px 18px;
-      transition: transform 0.2s;
+      transition: all 0.2s;
     }
 
-    .feature-item:hover { transform: translateX(8px); }
+    .feature-item:hover {
+      transform: translateX(8px);
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(247,183,49,0.3);
+    }
+
     .feature-icon { font-size: 22px; }
-    .feature-text { font-size: 14px; color: rgba(255,255,255,0.9); font-weight: 500; }
+
+    .feature-text {
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+      font-weight: 500;
+    }
 
     .auth-side {
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 40px;
+      animation: fadeInRight 0.7s ease;
+    }
+
+    @keyframes fadeInRight {
+      from { opacity: 0; transform: translateX(30px); }
+      to   { opacity: 1; transform: translateX(0); }
     }
 
     .auth-card {
-      background: rgba(255,255,255,0.1);
+      background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
       backdrop-filter: blur(24px);
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.1);
       border-radius: 24px;
       padding: 40px;
       width: 100%;
       max-width: 420px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
     }
 
     .auth-card h2 {
@@ -157,14 +205,14 @@
     }
 
     .auth-subtitle {
-      color: rgba(255,255,255,0.55);
+      color: rgba(255,255,255,0.45);
       font-size: 14px;
       margin-bottom: 28px;
     }
 
     .tabs {
       display: flex;
-      background: rgba(0,0,0,0.2);
+      background: rgba(0,0,0,0.3);
       border-radius: 12px;
       padding: 4px;
       margin-bottom: 24px;
@@ -177,30 +225,30 @@
       cursor: pointer;
       border-radius: 8px;
       font-size: 14px;
-      color: rgba(255,255,255,0.55);
+      color: rgba(255,255,255,0.45);
       font-weight: 600;
       transition: all 0.2s;
     }
 
     .tab.active {
-      background: rgba(255,255,255,0.15);
-      color: white;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      background: linear-gradient(135deg, rgba(247,183,49,0.2), rgba(255,159,67,0.1));
+      color: #ffd166;
+      border: 1px solid rgba(247,183,49,0.3);
     }
 
     label {
       display: block;
       font-size: 13px;
       font-weight: 600;
-      color: rgba(255,255,255,0.8);
+      color: rgba(255,255,255,0.7);
       margin-bottom: 6px;
     }
 
     .glass-input {
       width: 100%;
       padding: 13px 16px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
       border-radius: 12px;
       color: white;
       font-size: 15px;
@@ -209,35 +257,38 @@
       margin-bottom: 16px;
     }
 
-    .glass-input::placeholder { color: rgba(255,255,255,0.35); }
+    .glass-input::placeholder { color: rgba(255,255,255,0.3); }
 
     .glass-input:focus {
-      border-color: #87CEEB;
-      background: rgba(255,255,255,0.14);
+      border-color: #ffd166;
+      background: rgba(255,255,255,0.09);
+      box-shadow: 0 0 0 3px rgba(255,209,102,0.1);
     }
 
     .btn-primary {
       width: 100%;
       padding: 14px;
-      background: linear-gradient(135deg, #0077b6, #00b4d8);
-      color: white;
+      background: linear-gradient(135deg, #f7b731, #ff9f43);
+      color: #0a0e1a;
       border: none;
       border-radius: 12px;
       font-size: 16px;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
       transition: all 0.2s;
-      box-shadow: 0 4px 15px rgba(0,119,182,0.5);
+      box-shadow: 0 4px 20px rgba(247,183,49,0.35);
       margin-top: 4px;
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0,119,182,0.6);
+      box-shadow: 0 8px 28px rgba(247,183,49,0.5);
     }
 
+    .btn-primary:active { transform: translateY(0); }
+
     .error-msg {
-      color: #ff8080;
+      color: #ff6b6b;
       font-size: 13px;
       margin-bottom: 12px;
       min-height: 18px;
@@ -245,7 +296,7 @@
     }
 
     .success-msg {
-      color: #87CEEB;
+      color: #ffd166;
       font-size: 13px;
       margin-bottom: 12px;
       min-height: 18px;
@@ -254,44 +305,50 @@
 
     .toast {
       position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: rgba(0,0,0,0.85);
+      bottom: 32px;
+      right: 32px;
+      background: rgba(10,14,26,0.95);
       color: white;
       padding: 14px 22px;
       border-radius: 14px;
       font-size: 14px;
       font-weight: 600;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
       z-index: 999;
       transform: translateY(80px);
       opacity: 0;
       transition: all 0.35s ease;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
     }
 
     .toast.show { transform: translateY(0); opacity: 1; }
-    .toast.success { border-left: 4px solid #87CEEB; }
-    .toast.error   { border-left: 4px solid #ff8080; }
+    .toast.success { border-left: 4px solid #ffd166; }
+    .toast.error   { border-left: 4px solid #ff6b6b; }
 
     @media (max-width: 900px) {
       .page { grid-template-columns: 1fr; }
       .hero-side { display: none; }
       .auth-side { padding: 30px 20px; }
+      body { overflow-y: auto; }
     }
   </style>
 </head>
 <body>
 
-<div class="bubbles">
-  <div class="bubble"></div>
-  <div class="bubble"></div>
-  <div class="bubble"></div>
-  <div class="bubble"></div>
-  <div class="bubble"></div>
-  <div class="bubble"></div>
-  <div class="bubble"></div>
-  <div class="bubble"></div>
-  <div class="bubble"></div>
-  <div class="bubble"></div>
+<div class="bg"></div>
+
+<div class="particles">
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -361,21 +418,29 @@
 </div>
 
 <script>
-  const API = 'http://localhost:3000/api';
+  var API = 'http://localhost:3000/api';
 
-  if (localStorage.getItem('token')) {
+  // Check if user is already logged in
+  var savedToken = localStorage.getItem('token');
+  if (savedToken) {
     window.location.href = 'lists.html';
   }
 
+  // Show toast notification
   function showToast(message, type) {
-    const toast = document.getElementById('toast');
-    toast.textContent = type === 'success' ? '✅ ' + message : '❌ ' + message;
+    var toast = document.getElementById('toast');
+    if (type === 'success') {
+      toast.textContent = '✅ ' + message;
+    } else {
+      toast.textContent = '❌ ' + message;
+    }
     toast.className = 'toast ' + type + ' show';
     setTimeout(function() {
       toast.className = 'toast';
     }, 3000);
   }
 
+  // Switch between login and register tabs
   function showTab(tab) {
     if (tab === 'login') {
       document.getElementById('loginForm').style.display = 'block';
@@ -384,7 +449,8 @@
       document.getElementById('loginForm').style.display = 'none';
       document.getElementById('registerForm').style.display = 'block';
     }
-    document.querySelectorAll('.tab').forEach(function(t, i) {
+    var tabs = document.querySelectorAll('.tab');
+    tabs.forEach(function(t, i) {
       if ((tab === 'login' && i === 0) || (tab === 'register' && i === 1)) {
         t.classList.add('active');
       } else {
@@ -393,24 +459,25 @@
     });
   }
 
+  // Login function
   async function login() {
-    const email = document.getElementById('loginEmail').value.trim();
-    const password = document.getElementById('loginPassword').value;
+    var email = document.getElementById('loginEmail').value.trim();
+    var password = document.getElementById('loginPassword').value;
 
     if (!email || !password) {
       showToast('Please fill in all fields', 'error');
       return;
     }
 
-    const res = await fetch(API + '/auth/login', {
+    var response = await fetch(API + '/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: email, password: password })
     });
 
-    const data = await res.json();
+    var data = await response.json();
 
-    if (res.ok) {
+    if (response.ok) {
       localStorage.setItem('token', data.token);
       localStorage.setItem('username', data.username);
       localStorage.setItem('userId', data.userId);
@@ -423,25 +490,26 @@
     }
   }
 
+  // Register function
   async function register() {
-    const username = document.getElementById('regUsername').value.trim();
-    const email = document.getElementById('regEmail').value.trim();
-    const password = document.getElementById('regPassword').value;
+    var username = document.getElementById('regUsername').value.trim();
+    var email = document.getElementById('regEmail').value.trim();
+    var password = document.getElementById('regPassword').value;
 
     if (!username || !email || !password) {
       showToast('Please fill in all fields', 'error');
       return;
     }
 
-    const res = await fetch(API + '/auth/register', {
+    var response = await fetch(API + '/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: username, email: email, password: password })
     });
 
-    const data = await res.json();
+    var data = await response.json();
 
-    if (res.ok) {
+    if (response.ok) {
       showToast('Account created! Please login 🎉', 'success');
       setTimeout(function() {
         showTab('login');
@@ -451,9 +519,10 @@
     }
   }
 
+  // Submit form when Enter key is pressed
   document.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
-      const activeTab = document.querySelector('.tab.active').textContent;
+      var activeTab = document.querySelector('.tab.active').textContent;
       if (activeTab === 'Login') {
         login();
       } else {

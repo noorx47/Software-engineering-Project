@@ -3,15 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FlatCart — Login</title>
+  <title>FlatCart — My Lists</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
       min-height: 100vh;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #0a0e1a;
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
     .bg {
@@ -37,33 +41,94 @@
       position: absolute;
       width: 3px;
       height: 3px;
-      background: rgba(100,180,255,0.6);
+      background: rgba(100,180,255,0.5);
       border-radius: 50%;
       animation: floatParticle linear infinite;
     }
 
-    .particle:nth-child(1)  { left: 10%; animation-duration: 15s; animation-delay: 0s;   width: 4px; height: 4px; }
-    .particle:nth-child(2)  { left: 20%; animation-duration: 12s; animation-delay: 2s; }
-    .particle:nth-child(3)  { left: 30%; animation-duration: 18s; animation-delay: 1s;   width: 5px; height: 5px; }
-    .particle:nth-child(4)  { left: 45%; animation-duration: 14s; animation-delay: 3s; }
-    .particle:nth-child(5)  { left: 55%; animation-duration: 16s; animation-delay: 0.5s; width: 4px; height: 4px; }
-    .particle:nth-child(6)  { left: 65%; animation-duration: 11s; animation-delay: 2.5s; }
-    .particle:nth-child(7)  { left: 75%; animation-duration: 19s; animation-delay: 1.5s; }
-    .particle:nth-child(8)  { left: 85%; animation-duration: 13s; animation-delay: 4s; }
-    .particle:nth-child(9)  { left: 92%; animation-duration: 17s; animation-delay: 0.8s; width: 5px; height: 5px; }
-    .particle:nth-child(10) { left: 5%;  animation-duration: 20s; animation-delay: 3.5s; }
+    .particle:nth-child(1)  { left: 10%; animation-duration: 15s; animation-delay: 0s; }
+    .particle:nth-child(2)  { left: 25%; animation-duration: 12s; animation-delay: 2s; width: 4px; height: 4px; }
+    .particle:nth-child(3)  { left: 40%; animation-duration: 18s; animation-delay: 1s; }
+    .particle:nth-child(4)  { left: 55%; animation-duration: 14s; animation-delay: 3s; width: 5px; height: 5px; }
+    .particle:nth-child(5)  { left: 70%; animation-duration: 16s; animation-delay: 0.5s; }
+    .particle:nth-child(6)  { left: 85%; animation-duration: 11s; animation-delay: 2.5s; }
+    .particle:nth-child(7)  { left: 92%; animation-duration: 19s; animation-delay: 1.5s; }
+    .particle:nth-child(8)  { left: 5%;  animation-duration: 13s; animation-delay: 4s; }
 
     @keyframes floatParticle {
       0%   { transform: translateY(110vh); opacity: 0; }
       10%  { opacity: 1; }
       90%  { opacity: 1; }
-      100% { transform: translateY(-10vh);  opacity: 0; }
+      100% { transform: translateY(-10vh); opacity: 0; }
+    }
+
+    .nav {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 48px;
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .nav-logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-logo-icon {
+      font-size: 28px;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-6px); }
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .nav-user {
+      color: rgba(255,255,255,0.7);
+      font-size: 14px;
+      background: rgba(255,255,255,0.06);
+      padding: 8px 16px;
+      border-radius: 25px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-btn {
+      background: rgba(255,255,255,0.07);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 9px 22px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255,255,255,0.12);
+      transform: translateY(-1px);
     }
 
     .page {
       position: relative;
       z-index: 1;
-      min-height: 100vh;
+      min-height: calc(100vh - 74px);
       display: grid;
       grid-template-columns: 1fr 1fr;
     }
@@ -82,37 +147,25 @@
       to   { opacity: 1; transform: translateX(0); }
     }
 
-    .logo {
-      display: flex;
+    .hero-badge {
+      display: inline-flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 48px;
-    }
-
-    .logo-icon {
-      font-size: 40px;
-      animation: bounce 2s infinite;
-    }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(-10px); }
-    }
-
-    .logo-text {
-      font-size: 30px;
-      font-weight: 800;
-      letter-spacing: 2px;
-      background: linear-gradient(135deg, #ffffff, #a8d8ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(255,200,50,0.15), rgba(255,150,0,0.1));
+      border: 1px solid rgba(255,200,50,0.3);
+      color: #ffd166;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 16px;
+      border-radius: 25px;
+      margin-bottom: 28px;
+      width: fit-content;
     }
 
     .hero-title {
-      font-size: 54px;
+      font-size: 58px;
       font-weight: 800;
-      line-height: 1.15;
+      line-height: 1.1;
       margin-bottom: 20px;
       background: linear-gradient(135deg, #ffffff, #a8d8ff);
       -webkit-background-clip: text;
@@ -130,46 +183,53 @@
     .hero-sub {
       font-size: 17px;
       color: rgba(255,255,255,0.6);
-      margin-bottom: 40px;
+      margin-bottom: 48px;
       line-height: 1.8;
     }
 
-    .features {
+    .stats-row {
+      display: flex;
+      gap: 16px;
+    }
+
+    .stat-box {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 18px;
+      padding: 18px 20px;
+      text-align: center;
+      flex: 1;
+      transition: all 0.3s;
+    }
+
+    .stat-box:hover {
+      transform: translateY(-4px);
+      border-color: rgba(100,180,255,0.3);
+    }
+
+    .stat-number {
+      font-size: 30px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffd166, #ff9f43);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 4px;
+    }
+
+    .panel-side {
       display: flex;
       flex-direction: column;
-      gap: 14px;
-    }
-
-    .feature-item {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 14px;
-      padding: 14px 18px;
-      transition: all 0.2s;
-    }
-
-    .feature-item:hover {
-      transform: translateX(8px);
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(247,183,49,0.3);
-    }
-
-    .feature-icon { font-size: 22px; }
-
-    .feature-text {
-      font-size: 14px;
-      color: rgba(255,255,255,0.8);
-      font-weight: 500;
-    }
-
-    .auth-side {
-      display: flex;
-      align-items: center;
       justify-content: center;
-      padding: 40px;
+      padding: 40px 48px;
+      gap: 20px;
+      overflow-y: auto;
+      max-height: calc(100vh - 74px);
       animation: fadeInRight 0.7s ease;
     }
 
@@ -178,82 +238,45 @@
       to   { opacity: 1; transform: translateX(0); }
     }
 
-    .auth-card {
+    .glass-card {
       background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
-      backdrop-filter: blur(24px);
+      backdrop-filter: blur(20px);
       border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 24px;
-      padding: 40px;
-      width: 100%;
-      max-width: 420px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      border-radius: 22px;
+      padding: 28px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      transition: all 0.3s;
     }
 
-    .auth-card h2 {
+    .glass-card:hover {
+      border-color: rgba(247,183,49,0.2);
+    }
+
+    .glass-card h2 {
       color: white;
-      font-size: 24px;
+      font-size: 17px;
+      margin-bottom: 18px;
       font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .auth-subtitle {
-      color: rgba(255,255,255,0.45);
-      font-size: 14px;
-      margin-bottom: 28px;
-    }
-
-    .tabs {
-      display: flex;
-      background: rgba(0,0,0,0.3);
-      border-radius: 12px;
-      padding: 4px;
-      margin-bottom: 24px;
-    }
-
-    .tab {
-      flex: 1;
-      padding: 10px;
-      text-align: center;
-      cursor: pointer;
-      border-radius: 8px;
-      font-size: 14px;
-      color: rgba(255,255,255,0.45);
-      font-weight: 600;
-      transition: all 0.2s;
-    }
-
-    .tab.active {
-      background: linear-gradient(135deg, rgba(247,183,49,0.2), rgba(255,159,67,0.1));
-      color: #ffd166;
-      border: 1px solid rgba(247,183,49,0.3);
-    }
-
-    label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: rgba(255,255,255,0.7);
-      margin-bottom: 6px;
     }
 
     .glass-input {
       width: 100%;
       padding: 13px 16px;
       background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.15);
       border-radius: 12px;
       color: white;
       font-size: 15px;
       outline: none;
       transition: all 0.2s;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .glass-input::placeholder { color: rgba(255,255,255,0.3); }
 
     .glass-input:focus {
       border-color: #ffd166;
-      background: rgba(255,255,255,0.09);
+      background: rgba(255,255,255,0.1);
       box-shadow: 0 0 0 3px rgba(255,209,102,0.1);
     }
 
@@ -264,12 +287,11 @@
       color: #0a0e1a;
       border: none;
       border-radius: 12px;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
       cursor: pointer;
       transition: all 0.2s;
       box-shadow: 0 4px 20px rgba(247,183,49,0.35);
-      margin-top: 4px;
     }
 
     .btn-primary:hover {
@@ -277,22 +299,81 @@
       box-shadow: 0 8px 28px rgba(247,183,49,0.5);
     }
 
-    .btn-primary:active { transform: translateY(0); }
+    .list-item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .list-item-row:last-child { border-bottom: none; }
+
+    .list-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .list-date {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      margin-top: 3px;
+    }
+
+    .btn-open {
+      padding: 8px 18px;
+      background: rgba(247,183,49,0.15);
+      color: #ffd166;
+      border: 1px solid rgba(247,183,49,0.3);
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      transition: all 0.2s;
+      margin-left: 8px;
+    }
+
+    .btn-open:hover {
+      background: rgba(247,183,49,0.25);
+      transform: translateY(-1px);
+    }
+
+    .btn-remove {
+      padding: 8px 12px;
+      background: rgba(255,80,80,0.1);
+      color: #ff6b6b;
+      border: 1px solid rgba(255,80,80,0.25);
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+      margin-left: 6px;
+    }
+
+    .btn-remove:hover {
+      background: rgba(255,80,80,0.2);
+      transform: translateY(-1px);
+    }
 
     .error-msg {
       color: #ff6b6b;
       font-size: 13px;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       min-height: 18px;
-      text-align: center;
     }
 
-    .success-msg {
-      color: #ffd166;
-      font-size: 13px;
-      margin-bottom: 12px;
-      min-height: 18px;
+    .empty-msg {
       text-align: center;
+      color: rgba(255,255,255,0.35);
+      padding: 24px 0;
+      font-size: 14px;
     }
 
     .toast {
@@ -321,8 +402,7 @@
     @media (max-width: 900px) {
       .page { grid-template-columns: 1fr; }
       .hero-side { display: none; }
-      .auth-side { padding: 30px 20px; }
-      body { overflow-y: auto; }
+      .panel-side { max-height: none; padding: 20px; }
     }
   </style>
 </head>
@@ -339,70 +419,55 @@
   <div class="particle"></div>
   <div class="particle"></div>
   <div class="particle"></div>
-  <div class="particle"></div>
-  <div class="particle"></div>
 </div>
 
 <div class="toast" id="toast"></div>
 
+<div class="nav">
+  <div class="nav-logo">
+    <span class="nav-logo-icon">🛒</span>
+    FlatCart
+  </div>
+  <div class="nav-right">
+    <span class="nav-user">👤 <span id="navUsername"></span></span>
+    <button class="nav-btn" onclick="logout()">Logout</button>
+  </div>
+</div>
+
 <div class="page">
 
   <div class="hero-side">
-    <div class="logo">
-      <span class="logo-icon">🛒</span>
-      <span class="logo-text">FlatCart</span>
-    </div>
-    <h1 class="hero-title">Shopping<br/>made <span>simple</span><br/>together.</h1>
-    <p class="hero-sub">Share lists with your flatmates,<br/>tick off items in real time,<br/>never forget anything again.</p>
-    <div class="features">
-      <div class="feature-item">
-        <span class="feature-icon">👥</span>
-        <span class="feature-text">Invite flatmates to share lists instantly</span>
+    <div class="hero-badge">✨ Shared Shopping Made Easy</div>
+    <h1 class="hero-title">Your <span>Shopping</span><br/>Lists</h1>
+    <p class="hero-sub">Stay in sync with your flatmates.<br/>Add items, tick them off, share instantly.</p>
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-number" id="totalLists">0</div>
+        <div class="stat-label">Total Lists</div>
       </div>
-      <div class="feature-item">
-        <span class="feature-icon">🔄</span>
-        <span class="feature-text">Auto-updates every 5 seconds</span>
+      <div class="stat-box">
+        <div class="stat-number">👥</div>
+        <div class="stat-label">Shared</div>
       </div>
-      <div class="feature-item">
-        <span class="feature-icon">🖼️</span>
-        <span class="feature-text">Real product images from Open Food Facts</span>
-      </div>
-      <div class="feature-item">
-        <span class="feature-icon">🔒</span>
-        <span class="feature-text">Secure login with JWT authentication</span>
+      <div class="stat-box">
+        <div class="stat-number">✅</div>
+        <div class="stat-label">Active</div>
       </div>
     </div>
   </div>
 
-  <div class="auth-side">
-    <div class="auth-card">
-      <h2>Welcome to FlatCart 🛒</h2>
-      <p class="auth-subtitle">Sign in or create your account below</p>
+  <div class="panel-side">
+    <div class="glass-card">
+      <h2>➕ Create New List</h2>
+      <p class="error-msg" id="listError"></p>
+      <input class="glass-input" type="text" id="listName" placeholder="e.g. Weekly Shop, Party Supplies..." />
+      <button class="btn-primary" onclick="createList()">Create List →</button>
+    </div>
 
-      <div class="tabs">
-        <div class="tab active" onclick="showTab('login')">Login</div>
-        <div class="tab" onclick="showTab('register')">Register</div>
-      </div>
-
-      <div id="loginForm">
-        <p class="error-msg" id="loginError"></p>
-        <label>Email</label>
-        <input class="glass-input" type="email" id="loginEmail" placeholder="your@email.com" />
-        <label>Password</label>
-        <input class="glass-input" type="password" id="loginPassword" placeholder="••••••••" />
-        <button class="btn-primary" onclick="login()">Login →</button>
-      </div>
-
-      <div id="registerForm" style="display:none;">
-        <p class="error-msg" id="registerError"></p>
-        <p class="success-msg" id="registerSuccess"></p>
-        <label>Username</label>
-        <input class="glass-input" type="text" id="regUsername" placeholder="e.g. harnoor" />
-        <label>Email</label>
-        <input class="glass-input" type="email" id="regEmail" placeholder="your@email.com" />
-        <label>Password</label>
-        <input class="glass-input" type="password" id="regPassword" placeholder="Min 6 characters" />
-        <button class="btn-primary" onclick="register()">Create Account →</button>
+    <div class="glass-card">
+      <h2>📋 Your Lists</h2>
+      <div id="listsContainer">
+        <p class="empty-msg">Loading your lists...</p>
       </div>
     </div>
   </div>
@@ -410,96 +475,140 @@
 </div>
 
 <script>
-const API = 'http://localhost:3000/api';
-const token = localStorage.getItem('token');
+  var API = 'http://localhost:3000/api';
 
-if (!token) {
-  window.location.href = 'index.html';
-}
+  // Get token and username from browser storage
+  var token = localStorage.getItem('token');
+  var username = localStorage.getItem('username');
 
-console.log('Token found:', token);
+  // If no token found, send user back to login page
+  if (!token) {
+    window.location.href = 'index.html';
+  } else {
+    // Token exists so show username and load lists
+    document.getElementById('navUsername').textContent = username;
+    loadLists();
+  }
 
-document.addEventListener('DOMContentLoaded', function() {
-  loadLists();
-});
-
+  // Show toast notification at bottom of screen
   function showToast(message, type) {
-    const toast = document.getElementById('toast');
-    toast.textContent = type === 'success' ? '✅ ' + message : '❌ ' + message;
+    var toast = document.getElementById('toast');
+    if (type === 'success') {
+      toast.textContent = '✅ ' + message;
+    } else {
+      toast.textContent = '❌ ' + message;
+    }
     toast.className = 'toast ' + type + ' show';
-    setTimeout(function() { toast.className = 'toast'; }, 3000);
+    setTimeout(function() {
+      toast.className = 'toast';
+    }, 3000);
   }
 
-  function showTab(tab) {
-    if (tab === 'login') {
-      document.getElementById('loginForm').style.display = 'block';
-      document.getElementById('registerForm').style.display = 'none';
-    } else {
-      document.getElementById('loginForm').style.display = 'none';
-      document.getElementById('registerForm').style.display = 'block';
-    }
-    document.querySelectorAll('.tab').forEach(function(t, i) {
-      if ((tab === 'login' && i === 0) || (tab === 'register' && i === 1)) {
-        t.classList.add('active');
-      } else {
-        t.classList.remove('active');
-      }
+  // Load all lists from the backend
+  async function loadLists() {
+    var response = await fetch(API + '/lists', {
+      headers: { 'Authorization': 'Bearer ' + token }
     });
-  }
 
-  async function login() {
-    const email = document.getElementById('loginEmail').value.trim();
-    const password = document.getElementById('loginPassword').value;
-    if (!email || !password) {
-      showToast('Please fill in all fields', 'error');
+    var lists = await response.json();
+    var container = document.getElementById('listsContainer');
+
+    // If no lists found show empty message
+    if (!Array.isArray(lists) || lists.length === 0) {
+      container.innerHTML = '<p class="empty-msg">🛒 No lists yet. Create your first one!</p>';
+      document.getElementById('totalLists').textContent = '0';
       return;
     }
-    const res = await fetch(API + '/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email, password: password })
-    });
-    const data = await res.json();
-    if (res.ok) {
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('username', data.username);
-      localStorage.setItem('userId', data.userId);
-      showToast('Welcome back! 👋', 'success');
-      setTimeout(function() { window.location.href = 'lists.html'; }, 1000);
-    } else {
-      showToast(data.message, 'error');
+
+    // Update the total lists count
+    document.getElementById('totalLists').textContent = lists.length;
+
+    // Build the HTML for each list
+    var html = '';
+    for (var i = 0; i < lists.length; i++) {
+      var list = lists[i];
+      var date = new Date(list.createdAt).toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      });
+      html += '<div class="list-item-row" id="list-' + list._id + '">';
+      html += '<div>';
+      html += '<div class="list-name">📋 ' + list.name + '</div>';
+      html += '<div class="list-date">📅 ' + date + '</div>';
+      html += '</div>';
+      html += '<div style="display:flex; align-items:center;">';
+      html += '<button class="btn-open" onclick="openList(\'' + list._id + '\', \'' + list.name + '\')">Open →</button>';
+      html += '<button class="btn-remove" onclick="deleteList(\'' + list._id + '\')">🗑️</button>';
+      html += '</div>';
+      html += '</div>';
     }
+    container.innerHTML = html;
   }
 
-  async function register() {
-    const username = document.getElementById('regUsername').value.trim();
-    const email = document.getElementById('regEmail').value.trim();
-    const password = document.getElementById('regPassword').value;
-    if (!username || !email || !password) {
-      showToast('Please fill in all fields', 'error');
+  // Create a new list
+  async function createList() {
+    var name = document.getElementById('listName').value.trim();
+
+    if (!name) {
+      document.getElementById('listError').textContent = 'Please enter a list name';
       return;
     }
-    const res = await fetch(API + '/auth/register', {
+
+    var response = await fetch(API + '/lists', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: username, email: email, password: password })
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({ name: name })
     });
-    const data = await res.json();
-    if (res.ok) {
-      showToast('Account created! Please login 🎉', 'success');
-      setTimeout(function() { showTab('login'); }, 1500);
+
+    if (response.ok) {
+      document.getElementById('listName').value = '';
+      document.getElementById('listError').textContent = '';
+      showToast('List created!', 'success');
+      loadLists();
     } else {
-      showToast(data.message, 'error');
+      var data = await response.json();
+      document.getElementById('listError').textContent = data.message;
     }
   }
 
-  document.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      const activeTab = document.querySelector('.tab.active').textContent;
-      if (activeTab === 'Login') login();
-      else register();
-    }
-  });
+  // Show delete confirmation inside the row
+  function deleteList(id) {
+    var row = document.getElementById('list-' + id);
+    row.innerHTML = '<div style="display:flex; justify-content:space-between; align-items:center; width:100%;">'
+      + '<span style="color:#ff6b6b; font-size:14px; font-weight:600;">⚠️ Delete this list?</span>'
+      + '<div style="display:flex; gap:8px;">'
+      + '<button class="btn-open" onclick="confirmDelete(\'' + id + '\')">Yes</button>'
+      + '<button class="btn-remove" onclick="loadLists()">Cancel</button>'
+      + '</div>'
+      + '</div>';
+  }
+
+  // Actually delete the list after confirmation
+  async function confirmDelete(id) {
+    await fetch(API + '/lists/' + id, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    showToast('List deleted', 'success');
+    loadLists();
+  }
+
+  // Open a list and go to shopping page
+  function openList(id, name) {
+    localStorage.setItem('currentListId', id);
+    localStorage.setItem('currentListName', name);
+    window.location.href = 'shopping.html';
+  }
+
+  // Logout and clear saved data
+  function logout() {
+    localStorage.clear();
+    window.location.href = 'index.html';
+  }
 </script>
 
 </body>
